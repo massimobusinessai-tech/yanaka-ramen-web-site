@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yanaka Ramen - Izakaya Giapponese a Firenze</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --yanaka-red: #C8102E;
+            --yanaka-red-dark: #a00d25;
+            --white: #FFFFFF;
+            --black: #1E1E1E;
+            --light-gray: #F5F5F5;
+            --border-gray: #E0E0E0;
+            --font-primary: 'Montserrat', sans-serif;
+            --font-secondary: 'Inter', sans-serif;
+            --font-jp: 'Noto Sans JP', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-secondary);
+            color: var(--black);
+            background: var(--white);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--white);
+            border-bottom: 1px solid var(--border-gray);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-logo img {
+            height: 50px;
+            width: auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--black);
+            font-weight: 500;
+            font-size: 0.95rem;
+            font-family: var(--font-secondary);
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            color: var(--yanaka-red);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--yanaka-red);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 60px;
+            position: relative;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--white);
+            padding: 2rem 0;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--black);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+            font-family: var(--font-primary);
+        }
+
+        .hero-text h1 .accent {
+            color: var(--yanaka-red);
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            font-family: var(--font-secondary);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.85rem 2rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            font-family: var(--font-secondary);
+        }
+
+        .btn-primary {
+            background: var(--yanaka-red);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(200, 16, 46, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--yanaka-red-dark);
+            box-shadow: 0 6px 20px rgba(200, 16, 46, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--yanaka-red);
+            border: 2px solid var(--yanaka-red);
+        }
+
+        .btn-outline:hover {
+            background: var(--yanaka-red);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .hero-image {
+            position: relative;
+            height: 500px;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: zoomIn 0.8s ease-out;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(1.05);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Info Section */
+        .info-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: -5rem;
+            position: relative;
+            z-index: 20;
+            padding: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .info-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 3px solid var(--yanaka-red);
+        }
+
+        .info-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .info-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-card h3 {
+            font-size: 1.1rem;
+            color: var(--black);
+            margin-bottom: 0.5rem;
+            font-family: var(--font-primary);
+            font-weight: 700;
+        }
+
+        .info-card p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Section Styling */
+        section {
+            padding: 6rem 2rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--black);
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            font-family: var(--font-primary);
+        }
+
+        .section-title .accent {
+            color: var(--yanaka-red);
+        }
+
+        /* About Section */
+        .about {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-top: 3rem;
+        }
+
+        .about-text h3 {
+            font-size: 1.8rem;
+            color: var(--black);
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+            font-family: var(--font-primary);
+            font-weight: 700;
+        }
+
+        .about-text p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .about-image {
+            position: relative;
+            height: 400px;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Menu Section */
+        .menu {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .menu-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0 1rem;
+        }
+
+        .menu-tab-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--black);
+            background: var(--white);
+            color: var(--black);
+            border-radius: 0;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-family: var(--font-secondary);
+        }
+
+        .menu-tab-btn:hover {
+            border-color: var(--yanaka-red);
+            color: var(--yanaka-red);
+        }
+
+        .menu-tab-btn.active {
+            background: var(--yanaka-red);
+            color: var(--white);
+            border-color: var(--yanaka-red);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .menu-content {
+            display: none;
+        }
+
+        .menu-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-item {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .menu-item:hover {
+            border-left-color: var(--yanaka-red);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .menu-item-name {
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            font-family: var(--font-primary);
+        }
+
+        .menu-item-desc {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .menu-item-price {
+            color: var(--yanaka-red);
+            font-weight: 700;
+            font-size: 1.2rem;
+            font-family: var(--font-primary);
+        }
+
+        /* Gallery Section */
+        .gallery {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            height: 250px;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Contact Section */
+        .contact {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            background: var(--light-gray);
+            padding: 3rem;
+            border-radius: 0;
+            margin-top: 3rem;
+        }
+
+        .contact-info h3 {
+            font-size: 1.3rem;
+            color: var(--black);
+            margin-bottom: 1.5rem;
+            font-family: var(--font-primary);
+            font-weight: 700;
+        }
+
+        .contact-item {
+            margin-bottom: 2rem;
+        }
+
+        .contact-item-label {
+            font-weight: 700;
+            color: var(--yanaka-red);
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            font-family: var(--font-primary);
+        }
+
+        .contact-item-value {
+            color: var(--black);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .contact-item a {
+            color: var(--yanaka-red);
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-item a:hover {
+            opacity: 0.8;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--black);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            font-family: var(--font-primary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 0.85rem;
+            border: 2px solid var(--border-gray);
+            border-radius: 0;
+            font-family: var(--font-secondary);
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            background: var(--white);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--yanaka-red);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--black);
+            color: var(--white);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-content img {
+            height: 40px;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .footer-text {
+            margin-bottom: 1rem;
+            opacity: 0.8;
+            font-size: 0.95rem;
+        }
+
+        .footer-accent {
+            color: var(--yanaka-red);
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-text h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-image {
+                height: 300px;
+            }
+
+            .info-section {
+                grid-template-columns: 1fr;
+                margin-top: 0;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .about-content,
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .about-image {
+                height: 300px;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#home" class="nav-logo">
+                <img src="yanaka-logo.png" alt="Yanaka Ramen Logo">
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">Chi Siamo</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#gallery">Galleria</a></li>
+                <li><a href="#contact">Contatti</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Scopri l'Autentica Cucina <span class="accent">Giapponese</span></h1>
+                <p>Yanaka porta l'anima del Giappone nel cuore di Firenze. Immergiti nella tradizionale cucina ramen, nei piatti da izakaya e nel sake premium in un'atmosfera di calore ed eleganza.</p>
+                <div class="hero-buttons">
+                    <a href="#menu" class="btn btn-primary">Scopri il Menu</a>
+                    <a href="#contact" class="btn btn-outline">Prenota una Tavola</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="images/mmexport1784564504251.jpg" alt="Yanaka Ramen">
+            </div>
+        </div>
+
+        <!-- Info Cards -->
+        <div class="info-section">
+            <div class="info-card">
+                <div class="info-card-icon">📍</div>
+                <h3>Posizione</h3>
+                <p>Via di Novoli, 75R<br>Firenze, Italia</p>
+            </div>
+            <div class="info-card">
+                <div class="info-card-icon">⏰</div>
+                <h3>Orari</h3>
+                <p>Lun-Dom<br>12:00-15:00 &nbsp; 19:00-23:00</p>
+            </div>
+            <div class="info-card">
+                <div class="info-card-icon">📞</div>
+                <h3>Contatti</h3>
+                <p>+39 055 202 3759<br>Prenotazione WhatsApp</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <h2 class="section-title">Chi Siamo <span class="accent">Yanaka</span></h2>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Un'Autentica Esperienza Izakaya Giapponese</h3>
+                <p>Fondato con la passione per l'autentica cucina giapponese, Yanaka è la tua porta verso l'eccellenza culinaria. I nostri chef maestri preparano ogni piatto con estrema cura, utilizzando tecniche tradizionali tramandate di generazione in generazione.</p>
+                <p>Dal nostro caratteristico ramen tonkotsu alle fresche selezioni di sushi, ogni piatto racconta una storia del patrimonio culinario giapponese. Crediamo nel potere del cibo di riunire le persone—di creare momenti di connessione, gioia e scoperta.</p>
+                <p>Visitaci e scopri perché Yanaka è diventata la meta giapponese amata di Firenze.</p>
+            </div>
+            <div class="about-image">
+                <img src="images/mmexport1784565322868.jpg" alt="Yanaka Interior">
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section class="menu" id="menu">
+        <h2 class="section-title">Il Nostro <span class="accent">Menu</span></h2>
+
+        <!-- Menu Tabs -->
+        <div class="menu-tabs">
+            <button class="menu-tab-btn active" onclick="showMenuCategory('antipasti')">🥢 Antipasti</button>
+            <button class="menu-tab-btn" onclick="showMenuCategory('gyoza')">🥟 Gyoza</button>
+            <button class="menu-tab-btn" onclick="showMenuCategory('sando')">🥪 Sando</button>
+            <button class="menu-tab-btn" onclick="showMenuCategory('ramen')">🍜 Ramen</button>
+            <button class="menu-tab-btn" onclick="showMenuCategory('donburi')">🍚 Donburi</button>
+            <button class="menu-tab-btn" onclick="showMenuCategory('dolci')">🍰 Dolci</button>
+        </div>
+
+        <!-- ANTIPASTI -->
+        <div class="menu-content active" id="antipasti">
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <div class="menu-item-name">Imo Mochi Cheese (4 pz)</div>
+                    <div class="menu-item-desc">Mochi a base di patate alla giapponese con formaggio</div>
+                    <div class="menu-item-price">€8,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Okonomiyaki</div>
+                    <div class="menu-item-desc">Frittata giapponese con cavolo bianco, carote, cipollotto, granella di tempura, zenzero marinato, katsuobushi, maionese, salsa okonomiyaki</div>
+                    <div class="menu-item-price">€10,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Takoyaki</div>
+                    <div class="menu-item-desc">Polpettine di polpo, maionese, salsa okonomiyaki, katsuobushi</div>
+                    <div class="menu-item-price">€8,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Gomawakame</div>
+                    <div class="menu-item-desc">Insalata di alga wakame, sesamo</div>
+                    <div class="menu-item-price">€6,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Karaage Spicy (6 pz)</div>
+                    <div class="menu-item-desc">Il pollo fritto alla giapponese piccante</div>
+                    <div class="menu-item-price">€9,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Tempura</div>
+                    <div class="menu-item-desc">Tempura di gamberi</div>
+                    <div class="menu-item-price">€10,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Mitoboru</div>
+                    <div class="menu-item-desc">Polpette giapponesi con maiale, salsa okonomiyaki, maionese, cipollotto</div>
+                    <div class="menu-item-price">€8,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Oyaki Beef (4 pz)</div>
+                    <div class="menu-item-desc">Bocconcini dolci e salati alla giapponese con carne di manzo, cipolla e salsa di soia</div>
+                    <div class="menu-item-price">€9,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Onigiri Maze</div>
+                    <div class="menu-item-desc">Polpetta di riso con pollo, bambù, radice di loto, funghi shiitake e alghe kombu</div>
+                    <div class="menu-item-price">€7,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Ajitama</div>
+                    <div class="menu-item-desc">Uovo sodo marinato, katsuobushi, wakame, salsa tamari, sesamo</div>
+                    <div class="menu-item-price">€5,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Oyaki Vegetable (4 pz)</div>
+                    <div class="menu-item-desc">Bocconcini alla giapponese con erba cipollina cinese e salsa di soia</div>
+                    <div class="menu-item-price">€7,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Miso Shiru</div>
+                    <div class="menu-item-desc">Zuppa di miso, alga wakame, tofu, cipollotto</div>
+                    <div class="menu-item-price">€6,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Edamame</div>
+                    <div class="menu-item-desc">Baccelli di soia, sale Maldon</div>
+                    <div class="menu-item-price">€5,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Hiyayakko</div>
+                    <div class="menu-item-desc">Tofu morbido, salsa tamari, cipollotto, katsuobushi</div>
+                    <div class="menu-item-price">€6,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Yakitori</div>
+                    <div class="menu-item-desc">Spiedini di pollo con cipollotto e salsa yakitori</div>
+                    <div class="menu-item-price">€9,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Karaage Okonomi (6 pz)</div>
+                    <div class="menu-item-desc">Il pollo fritto alla giapponese</div>
+                    <div class="menu-item-price">€9,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Satsumaimo</div>
+                    <div class="menu-item-desc">Patatine dolci croccanti fuori e morbide dentro, fritte al momento</div>
+                    <div class="menu-item-price">€6,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Age Ebi Mitoboru</div>
+                    <div class="menu-item-desc">Gamberi fritti dorati, all'esterno fragranti, all'interno teneri e succosi</div>
+                    <div class="menu-item-price">€10,50</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GYOZA -->
+        <div class="menu-content" id="gyoza">
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <div class="menu-item-name">Gyoza Gamberi (6 pezzi)</div>
+                    <div class="menu-item-desc">Gyoza rosa brasati con ripieno di mazzancolle e verdure, delicati e croccanti fuori</div>
+                    <div class="menu-item-price">€10,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Gyoza Pollo (6 pezzi)</div>
+                    <div class="menu-item-desc">Ravioli brasati ripieni di pollo e verdure</div>
+                    <div class="menu-item-price">€8,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Gyoza Maiale (6 pezzi)</div>
+                    <div class="menu-item-desc">Ravioli brasati ripieni di maiale e verza</div>
+                    <div class="menu-item-price">€8,50</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SANDO -->
+        <div class="menu-content" id="sando">
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <div class="menu-item-name">Sando Tonkatsu</div>
+                    <div class="menu-item-desc">Sandwich giapponese con base latte farcito con: cotoletta di maiale, salsa tonkatsu, cavolo cappuccio, maionese, sesamo</div>
+                    <div class="menu-item-price">€11,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Sando Tamago</div>
+                    <div class="menu-item-desc">Sandwich giapponese con base latte farcito con: uovo strapazzato, ajitama, maionese, cipollotto, togarashi</div>
+                    <div class="menu-item-price">€10,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Sando Chashu</div>
+                    <div class="menu-item-desc">Sandwich giapponese con base latte farcito con: chashu, pancetta di maiale, maionese, pak-choi, cavolo cinese</div>
+                    <div class="menu-item-price">€11,00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RAMEN -->
+        <div class="menu-content" id="ramen">
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <div class="menu-item-name">Ramen Spicy</div>
+                    <div class="menu-item-desc">Brodo di pollo, latte di soia, pasta di sesamo e arachidi, olio piccante e togarashi, noodles, macinato di maiale, germogli di soia, cipollotto, pak-choi, ajitama, alga nori, naruto, pasta di pesce</div>
+                    <div class="menu-item-price">€14,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Ramen di Maiale</div>
+                    <div class="menu-item-desc">Brodo di miso, maiale e pollo, noodles, chashu, pancetta di maiale, pannocchia, pak-choi, ajitama, cipollotto, alga nori, sesamo, naruto, pasta di pesce</div>
+                    <div class="menu-item-price">€15,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Ramen Veggy</div>
+                    <div class="menu-item-desc">Brodo di verdure, noodles, germogli di soia, pannocchia, tofu, bambù, pak-choi, ajitama, alga nori, funghi shiitake, cipollotto, semi di sesamo</div>
+                    <div class="menu-item-price">€13,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Ramen Manzo</div>
+                    <div class="menu-item-desc">Brodo di manzo, noodles, manzo marinato, tofu, bambù, cipollotto, pak-choi, uovo sodo marinato, alga nori, sesamo, naruto, pasta di pesce</div>
+                    <div class="menu-item-price">€16,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Gyu Soba</div>
+                    <div class="menu-item-desc">Soba di grano saraceno, manzo e funghi shiitake, tuorlo d'uovo crudo, mandorle tostate, germogli di soia, cipollotto, salsa tamari</div>
+                    <div class="menu-item-price">€14,00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DONBURI -->
+        <div class="menu-content" id="donburi">
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <div class="menu-item-name">Tonkatsu Curry Don</div>
+                    <div class="menu-item-desc">Tonkatsu, riso, uova, curry e verdure</div>
+                    <div class="menu-item-price">€13,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Sukiyaki Don</div>
+                    <div class="menu-item-desc">Riso con straccetti di manzo, verdure, funghi shiitake, semi di sesamo</div>
+                    <div class="menu-item-price">€14,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Ebi Chirashi</div>
+                    <div class="menu-item-desc">Riso marinato con aggiunta di gamberi, surimi, mango, wakame, uova, edamame, semi di sesamo</div>
+                    <div class="menu-item-price">€15,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Unagi Don</div>
+                    <div class="menu-item-desc">Riso, anguilla, soia, sesamo, cipollotto, alga nori</div>
+                    <div class="menu-item-price">€16,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Curry Verdura</div>
+                    <div class="menu-item-desc">Riso con curry e verdure</div>
+                    <div class="menu-item-price">€12,00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DOLCI -->
+        <div class="menu-content" id="dolci">
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <div class="menu-item-name">Hiromi</div>
+                    <div class="menu-item-desc">Mousse di prugne e umeshu, cuore di lampone e composta di azuki, bisquit al cacao</div>
+                    <div class="menu-item-price">€7,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Okinawa</div>
+                    <div class="menu-item-desc">Croccante cioccolato e cocco, cuore gelèe di mango e passion fruit con cremoso al cioccolato fondente</div>
+                    <div class="menu-item-price">€8,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Shizuku</div>
+                    <div class="menu-item-desc">Mousse al cioccolato, cremoso alla nocciola e zenzero con Madagascar 64%</div>
+                    <div class="menu-item-price">€7,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Reiwa</div>
+                    <div class="menu-item-desc">Mousse di cioccolato al latte, cuore di composta di azuki, bisquit al cacao, copertura fondente 64%</div>
+                    <div class="menu-item-price">€7,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Matcha Cake</div>
+                    <div class="menu-item-desc">Torta con cioccolato bianco e matcha, farina di riso per esaltare l'aromaticità del thè verde</div>
+                    <div class="menu-item-price">€7,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Aki</div>
+                    <div class="menu-item-desc">Cremosa mousse dal sentore di thè matcha, arricchita da sapore di castagne e mandarino</div>
+                    <div class="menu-item-price">€7,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Cheesecake al Matcha</div>
+                    <div class="menu-item-desc">Mousse al formaggio e crema al thè matcha</div>
+                    <div class="menu-item-price">€7,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Cheesecake al Mango</div>
+                    <div class="menu-item-desc">Mousse al formaggio e crema al mango</div>
+                    <div class="menu-item-price">€7,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Dorayaki Azuki</div>
+                    <div class="menu-item-desc">Dorayaki farcito con azuki (fagioli rossi dolci)</div>
+                    <div class="menu-item-price">€5,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Dorayaki Cioccolato</div>
+                    <div class="menu-item-desc">Dorayaki farcito con crema namelaka al cioccolato</div>
+                    <div class="menu-item-price">€5,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Dorayaki Doppio Matcha</div>
+                    <div class="menu-item-desc">Dorayaki con ripieno a gusto di thè matcha</div>
+                    <div class="menu-item-price">€5,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Dorayaki Matcha Cream e Azuki</div>
+                    <div class="menu-item-desc">Dorayaki farcito con crema di thè matcha e azuki (fagioli rossi dolci)</div>
+                    <div class="menu-item-price">€6,00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Dorayaki Mela e Mascarpone</div>
+                    <div class="menu-item-desc">Dorayaki farcito con mascarpone e mela</div>
+                    <div class="menu-item-price">€5,50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">Dorayaki Banana e Caramello</div>
+                    <div class="menu-item-desc">Dorayaki farcito con cremoso alla banana e caramello</div>
+                    <div class="menu-item-price">€5,50</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery" id="gallery">
+        <h2 class="section-title">Galleria & <span class="accent">Atmosfera</span></h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="images/mmexport1784565325689.jpg" alt="Piatti Yanaka">
+            </div>
+            <div class="gallery-item">
+                <img src="images/mmexport1784565328409.jpg" alt="Atmosfera Yanaka">
+            </div>
+            <div class="gallery-item">
+                <img src="images/mmexport1784565330727.jpg" alt="Servizio Yanaka">
+            </div>
+            <div class="gallery-item">
+                <img src="images/mmexport1784565333290.jpg" alt="Dettagli Yanaka">
+            </div>
+            <div class="gallery-item">
+                <img src="images/mmexport1784565335518.jpg" alt="Cena Yanaka">
+            </div>
+            <div class="gallery-item">
+                <img src="images/mmexport1784565337935.jpg" alt="Esperienza Yanaka">
+            </div>
+            <div class="gallery-item">
+                <img src="images/mmexport1784565340319.jpg" alt="Piatti Speciali Yanaka">
+            </div>
+            <div class="gallery-item">
+                <img src="images/mmexport1784565342768.jpg" alt="Preparazione Yanaka">
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <h2 class="section-title">Contattaci <span class="accent">Ora</span></h2>
+        <div class="contact-content">
+            <div class="contact-info">
+                <h3>Vienici a Trovare</h3>
+
+                <div class="contact-item">
+                    <div class="contact-item-label">📍 INDIRIZZO</div>
+                    <div class="contact-item-value">Via di Novoli, 75R<br>50129 Firenze, Italia</div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-item-label">📞 TELEFONO</div>
+                    <div class="contact-item-value"><a href="tel:+39055202359">+39 055 202 3759</a></div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-item-label">⏰ ORARI</div>
+                    <div class="contact-item-value">
+                        Lunedì - Domenica<br>
+                        12:00 - 15:00<br>
+                        19:00 - 23:00
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-item-label">💬 WHATSAPP</div>
+                    <div class="contact-item-value">
+                        <a href="https://wa.me/39055202359?text=Vorrei%20fare%20una%20prenotazione%20a%20Yanaka%20Ramen" target="_blank">Messaggio su WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+
+            <form class="contact-form" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label for="name">Nome</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Telefono</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+                <div class="form-group">
+                    <label for="message">Messaggio</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Invia Messaggio</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <img src="yanaka-logo.png" alt="Yanaka Logo">
+            <div class="footer-text"><span class="footer-accent">Yanaka Ramen</span> — Autentica Izakaya Giapponese</div>
+            <div class="footer-text">Via di Novoli, 75R • Firenze • +39 055 202 3759</div>
+            <div class="footer-text">© 2026 Yanaka. Tutti i diritti riservati. Fatto con ❤️ a Firenze.</div>
+        </div>
+    </footer>
+
+    <script>
+        function showMenuCategory(category) {
+            // Hide all menu contents
+            const allContents = document.querySelectorAll('.menu-content');
+            allContents.forEach(content => content.classList.remove('active'));
+
+            // Remove active class from all buttons
+            const allButtons = document.querySelectorAll('.menu-tab-btn');
+            allButtons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected category
+            const selectedContent = document.getElementById(category);
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+            }
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const message = document.getElementById('message').value;
+
+            const whatsappMessage = `Ciao! Sono ${name}. ${message} Contattami: ${email} / ${phone}`;
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            window.open(`https://wa.me/39055202359?text=${encodedMessage}`, '_blank');
+
+            event.target.reset();
+        }
+    </script>
+</body>
+</html>
