@@ -12,22 +12,98 @@ const CheckoutModule = (() => {
   let confirmedOrder = null;
 
   /**
+   * Generate pickup slots client-side (for demo mode without backend)
+   * Hours: 12:00-15:00, 19:00-23:00, 15-min intervals, 30-min prep time
+   */
+  function generateLocalSlots() {
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const minPrepTime = 30; // 30 minutes prep time
+
+    const windows = [
+      { label: 'Pranzo', start: 12 * 60, end: 15 * 60 },
+      { label: 'Cena', start: 19 * 60, end: 23 * 60 }
+    ];
+
+    const slots = [];
+    let isOpen = false;
+
+    for (const win of windows) {
+      // Check if currently in this window
+      if (currentMinutes >= win.start && currentMinutes < win.end) {
+        isOpen = true;
+      }
+
+      // Only generate slots for the current window
+      if (currentMinutes >= win.start && currentMinutes < win.end) {
+        let slotStart = Math.max(currentMinutes + minPrepTime, win.start);
+        // Round up to next 15-min interval
+        slotStart = Math.ceil(slotStart / 15) * 15;
+
+        for (let m = slotStart; m < win.end; m += 15) {
+          const h = Math.floor(m / 60);
+          const min = m % 60;
+          const time = String(h).padStart(2, '0') + ':' + String(min).padStart(2, '0');
+          slots.push({ time, available: true, remaining: 5 });
+        }
+      }
+    }
+
+    // If currently closed, return next available window info
+    if (!isOpen) {
+      // Find the next opening window
+      for (const win of windows) {
+        if (currentMinutes < win.start) {
+          const h = Math.floor(win.start / 60);
+          const min = win.start % 60;
+          return { open: false, nextOpen: String(h).padStart(2, '0') + ':' + String(min).padStart(2, '0'), slots: [] };
+        }
+      }
+      return { open: false, nextOpen: 'domani alle 12:00', slots: [] };
+    }
+
+    return { open: true, slots };
+  }
+
+  /**
    * Open checkout modal with cart data
    */
   async function openCheckout() {
     const items = CartModule.getItems();
     if (items.length === 0) return;
 
-    // Check if open
+    // Check if open — prefers API, falls back to local calculation
     try {
       const hoursRes = await fetch('/api/hours');
-      const hoursData = await hoursRes.json();
+      if (hoursRes.ok) {
+        const hoursData = await hoursRes.json();
+        document.getElementById('checkout-modal').classList.add('show');
+        document.body.classList.add('menu-open');
+
+        if (!hoursData.open) {
+          document.getElementById('hours-warning').style.display = 'block';
+          document.getElementById('hours-warning').textContent = 'Il ristorante è chiuso in questo momento. Torna durante l\'orario di apertura (12:00-15:00 / 19:00-23:00).';
+          document.getElementById('pay-btn').disabled = true;
+        } else {
+          document.getElementById('hours-warning').style.display = 'none';
+          document.getElementById('pay-btn').disabled = false;
+        }
+
+        renderPickupSlots(hoursData.slots || []);
+        renderCheckoutSummary();
+        selectedSlot = null;
+        return;
+      }
+      throw new Error('API not available');
+    } catch {
+      // Fallback: generate slots client-side (works on Netlify without backend)
+      const hoursData = generateLocalSlots();
       document.getElementById('checkout-modal').classList.add('show');
       document.body.classList.add('menu-open');
 
       if (!hoursData.open) {
         document.getElementById('hours-warning').style.display = 'block';
-        document.getElementById('hours-warning').textContent = 'Il ristorante è chiuso in questo momento. Torna durante l\'orario di apertura (12:00-15:00 / 19:00-23:00).';
+        document.getElementById('hours-warning').textContent = 'Il ristorante è chiuso. Riapre alle ' + hoursData.nextOpen + '.';
         document.getElementById('pay-btn').disabled = true;
       } else {
         document.getElementById('hours-warning').style.display = 'none';
@@ -35,14 +111,9 @@ const CheckoutModule = (() => {
       }
 
       renderPickupSlots(hoursData.slots || []);
-    } catch {
-      // If we can't check hours, still allow checkout
-      document.getElementById('checkout-modal').classList.add('show');
-      document.body.classList.add('menu-open');
+      renderCheckoutSummary();
+      selectedSlot = null;
     }
-
-    renderCheckoutSummary();
-    selectedSlot = null;
   }
 
   /**
@@ -203,7 +274,11 @@ const CheckoutModule = (() => {
       }
     } catch (err) {
       console.error('Checkout error:', err);
-      alert('Errore di connessione. Riprova.');
+      // Demo mode: if backend unavailable, create a local test order
+      const demoId = 'DEMO-' + Date.now().toString(36).toUpperCase();
+      CartModule.clearCart();
+      closeCheckout();
+      showConfirmation(demoId);
       isProcessing = false;
       payBtn.disabled = false;
       payBtn.classList.remove('loading');
@@ -220,7 +295,40 @@ const CheckoutModule = (() => {
     document.getElementById('confirmation-modal').classList.add('show');
     document.getElementById('confirm-order-id').textContent = orderId;
 
-    // Get order details
+    // If it's a demo order, show details from cart data directly
+    if (orderId && orderId.startsWith('DEMO-')) {
+      const name = document.getElementById('customer-name').value.trim();
+      const phone = document.getElementById('customer-phone').value.trim();
+      const notes = document.getElementById('order-notes').value.trim();
+      const items = CartModule.getItems();
+      const total = CartModule.getTotal();
+
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+      const dateStr = now.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+      let details = '<p><strong>Cliente:</strong> ' + name + '</p>' +
+        '<p><strong>Ritiro:</strong> ' + dateStr + ' alle ' + timeStr + ' (stima)</p>' +
+        (notes ? '<p><strong>Note:</strong> ' + notes + '</p>' : '') +
+        '<div class="confirmation-items" id="confirm-items"></div>' +
+        '<p style="margin-top:0.75rem;font-weight:700;color:var(--yanaka-red);font-size:1.1rem"><strong>Totale:</strong> €' + total.toFixed(2) + '</p>' +
+        '<p style="margin-top:0.5rem;font-size:0.8rem;color:#999">🧪 Modalità demo — mostra questo a papà!</p>';
+
+      document.getElementById('confirm-details').innerHTML = details;
+
+      const itemsContainer = document.getElementById('confirm-items');
+      if (itemsContainer) {
+        items.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'confirmation-item';
+          div.innerHTML = '<span>' + item.name + ' ×' + item.quantity + '</span><span>€' + (item.price * item.quantity).toFixed(2) + '</span>';
+          itemsContainer.appendChild(div);
+        });
+      }
+      return;
+    }
+
+    // Normal flow: get order details from API
     fetch('/api/order/' + orderId)
       .then(res => res.json())
       .then(data => {

@@ -10,19 +10,34 @@ const MenuModule = (() => {
   let activeCategory = 'antipasti';
 
   /**
-   * Load menu from API
+   * Load menu from API, with static fallback for static hosting (Netlify)
    */
   async function loadMenu() {
     try {
       const res = await fetch('/api/menu');
+      if (!res.ok) throw new Error('API not available');
       const data = await res.json();
       menuData = data.categories || {};
       return data;
-    } catch (err) {
-      console.error('Errore caricamento menu:', err);
-      document.getElementById('menu-grid-container').innerHTML =
-        '<p class="menu-loading">Errore nel caricamento del menu. Riprova più tardi.</p>';
-      return null;
+    } catch {
+      // Fallback: load from static JSON file (works on Netlify without backend)
+      try {
+        const res = await fetch('/menu.json');
+        const data = await res.json();
+        // Group by category like the API does
+        const categories = {};
+        for (const item of data) {
+          if (!categories[item.category]) categories[item.category] = [];
+          categories[item.category].push(item);
+        }
+        menuData = categories;
+        return { items: data, categories };
+      } catch (err2) {
+        console.error('Errore caricamento menu:', err2);
+        document.getElementById('menu-grid-container').innerHTML =
+          '<p class="menu-loading">Errore nel caricamento del menu. Riprova più tardi.</p>';
+        return null;
+      }
     }
   }
 
