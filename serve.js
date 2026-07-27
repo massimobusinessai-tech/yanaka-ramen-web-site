@@ -599,11 +599,7 @@ app.use(express.static(__dirname));
 
 // Fallback: serve index.html for any unmatched route (SPA-like behavior)
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'), err => {
-    if (err) {
-      res.sendFile(path.join(__dirname, 'index.html'));
-    }
-  });
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // ─── Start Server ────────────────────────────────────────────────────────────

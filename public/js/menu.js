@@ -20,9 +20,9 @@ const MenuModule = (() => {
       menuData = data.categories || {};
       return data;
     } catch {
-      // Fallback: load from static JSON file (works on Netlify without backend)
+      // Fallback: load from static JSON file (works without backend API)
       try {
-        const res = await fetch('/menu.json');
+        const res = await fetch('/data/menu.json');
         const data = await res.json();
         // Group by category like the API does
         const categories = {};
