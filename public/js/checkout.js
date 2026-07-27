@@ -288,8 +288,10 @@ const CheckoutModule = (() => {
 
   /**
    * Show confirmation after successful payment
+   * @param {string} orderId - The order ID
+   * @param {object} [orderData] - Optional pre-fetched order data (avoids extra API call)
    */
-  function showConfirmation(orderId) {
+  function showConfirmation(orderId, orderData) {
     confirmedOrder = orderId;
     // Show confirmation modal
     document.getElementById('confirmation-modal').classList.add('show');
@@ -328,32 +330,18 @@ const CheckoutModule = (() => {
       return;
     }
 
+    // If orderData was provided (from order-status API), use it directly
+    if (orderData) {
+      renderConfirmationFromData(orderData);
+      return;
+    }
+
     // Normal flow: get order details from API
     fetch('/api/order/' + orderId)
       .then(res => res.json())
       .then(data => {
         if (data.order) {
-          const order = data.order;
-          const pickupDate = new Date(order.pickupTime);
-          const timeStr = pickupDate.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-          const dateStr = pickupDate.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
-
-          document.getElementById('confirm-details').innerHTML =
-            '<p><strong>Cliente:</strong> ' + order.customerName + '</p>' +
-            '<p><strong>Ritiro:</strong> ' + dateStr + ' alle ' + timeStr + '</p>' +
-            (order.notes ? '<p><strong>Note:</strong> ' + order.notes + '</p>' : '') +
-            '<div class="confirmation-items" id="confirm-items"></div>' +
-            '<p style="margin-top:0.75rem;font-weight:700;color:var(--yanaka-red);font-size:1.1rem"><strong>Totale:</strong> €' + order.total.toFixed(2) + '</p>';
-
-          const itemsContainer = document.getElementById('confirm-items');
-          if (itemsContainer && order.items) {
-            order.items.forEach(item => {
-              const div = document.createElement('div');
-              div.className = 'confirmation-item';
-              div.innerHTML = '<span>' + item.name + ' ×' + item.quantity + '</span><span>€' + (item.price * item.quantity).toFixed(2) + '</span>';
-              itemsContainer.appendChild(div);
-            });
-          }
+          renderConfirmationFromData(data.order);
         }
       })
       .catch(() => {
@@ -382,7 +370,7 @@ const CheckoutModule = (() => {
 
         if (data.found && data.status === 'paid' && data.order) {
           CartModule.clearCart();
-          showConfirmation(data.order.id);
+          showConfirmation(data.order.id, data.order);
         } else if (data.found && data.status === 'pending') {
           // Still processing — poll a few times
           let attempts = 0;
@@ -393,7 +381,7 @@ const CheckoutModule = (() => {
             if (pollData.found && pollData.status === 'paid' && pollData.order) {
               clearInterval(poll);
               CartModule.clearCart();
-              showConfirmation(pollData.order.id);
+              showConfirmation(pollData.order.id, pollData.order);
             } else if (attempts > 10) {
               clearInterval(poll);
               document.getElementById('confirmation-modal').classList.add('show');
@@ -407,6 +395,36 @@ const CheckoutModule = (() => {
       } catch {
         // Silent fail
       }
+    }
+  }
+
+  /**
+   * Render confirmation from order data (shared between API and orderData paths)
+   */
+  function renderConfirmationFromData(order) {
+    const pickupDate = new Date(order.pickupTime);
+    const timeStr = !isNaN(pickupDate.getTime())
+      ? pickupDate.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })
+      : 'Da confermare';
+    const dateStr = !isNaN(pickupDate.getTime())
+      ? pickupDate.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' })
+      : '';
+
+    document.getElementById('confirm-details').innerHTML =
+      '<p><strong>Cliente:</strong> ' + (order.customerName || 'Non specificato') + '</p>' +
+      '<p><strong>Ritiro:</strong> ' + (dateStr ? dateStr + ' alle ' + timeStr : timeStr) + '</p>' +
+      (order.notes ? '<p><strong>Note:</strong> ' + order.notes + '</p>' : '') +
+      '<div class="confirmation-items" id="confirm-items"></div>' +
+      '<p style="margin-top:0.75rem;font-weight:700;color:var(--yanaka-red);font-size:1.1rem"><strong>Totale:</strong> €' + (order.total || 0).toFixed(2) + '</p>';
+
+    const itemsContainer = document.getElementById('confirm-items');
+    if (itemsContainer && order.items && order.items.length > 0) {
+      order.items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'confirmation-item';
+        div.innerHTML = '<span>' + item.name + ' ×' + item.quantity + '</span><span>€' + (item.price * item.quantity).toFixed(2) + '</span>';
+        itemsContainer.appendChild(div);
+      });
     }
   }
 
