@@ -14,5 +14,8 @@
   "dependencies": {
     "express": "^5.2.1",
     "puppeteer": "^25.3.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.0"
   }
 }
